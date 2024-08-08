@@ -1,0 +1,19 @@
+.container {
+    background-image: url('/images/login.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: rgb(124, 114, 87);
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
