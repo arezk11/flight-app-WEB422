@@ -30,7 +30,7 @@ export default function Home() {
 
   const fetchFlights = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/flights');
+      const response = await fetch('https://your-external-api.com/flights'); // Replace with your actual API URL
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -45,12 +45,16 @@ export default function Home() {
 
   const fetchWishlist = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/wishlist/${userId}`);
+      const response = await fetch(`/api/wishlist?userId=${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setWishlist(data);
+      setWishlist(data.flights || []);
     } catch (error) {
       console.error('Failed to fetch wishlist:', error);
     }
@@ -102,29 +106,20 @@ export default function Home() {
       const token = localStorage.getItem('token');
       if (token) {
         const userId = JSON.parse(atob(token.split('.')[1])).userId;
-        const isInWishlist = wishlist.some((flight) => flight._id === flightId);
 
         try {
-          if (isInWishlist) {
-            await fetch('http://localhost:8080/api/wishlist/remove', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ userId, flightId }),
-            });
-            setWishlist(wishlist.filter((flight) => flight._id !== flightId));
-          } else {
-            await fetch('http://localhost:8080/api/wishlist/add', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ userId, flightId }),
-            });
-            const flight = flights.find((flight) => flight._id === flightId);
-            setWishlist([...wishlist, flight]);
+          const response = await fetch('/api/wishlist', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userId, flightId }),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
           }
+          fetchWishlist(userId);
         } catch (error) {
           console.error('Failed to update wishlist:', error);
         }
@@ -170,8 +165,8 @@ export default function Home() {
                       <Dropdown.Menu>
                         {wishlist.length > 0 ? (
                           wishlist.map(flight => (
-                            <Dropdown.Item key={flight._id}>
-                              {flight.flight}
+                            <Dropdown.Item key={flight}>
+                              {flight}
                             </Dropdown.Item>
                           ))
                         ) : (
@@ -239,7 +234,7 @@ export default function Home() {
                   </Card.Text>
                   {isClient && localStorage.getItem('token') && (
                     <Button variant="outline-danger" onClick={() => handleWishlistToggle(flight._id)}>
-                      <span role="img" aria-label="wishlist" style={{ color: wishlist.some(w => w._id === flight._id) ? 'black' : 'red' }}>
+                      <span role="img" aria-label="wishlist">
                         ❤️
                       </span>
                     </Button>
