@@ -30,7 +30,7 @@ export default function Home() {
 
   const fetchFlights = async () => {
     try {
-      const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=9CgYreB857S5YE6UzGqJt1Cfnl6jnsYl07J5H_-O2c4GkSbqZrZ33RFeaYATK_Z4CfB7tjVtgCO14dmCPVDPSRxGgPt7AdG8m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnKo9Mx1y9gVJKkomOVf9RyvonW_8TSvWiWN9Kwgize1jdOOUa2Ehg23sGVDjEyCHYViC--exdo4qoue4CRV9cFNs5q7ZljviaQ&lib=MahnT0SVJ5TJwLVdHHKEuSzJGkEaqmmYY'); // Replace with your actual API URL
+      const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=9CgYreB857S5YE6UzGqJt1Cfnl6jnsYl07J5H_-O2c4GkSbqZrZ33RFeaYATK_Z4CfB7tjVtgCO14dmCPVDPSRxGgPt7AdG8m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnKo9Mx1y9gVJKkomOVf9RyvonW_8TSvWiWN9Kwgize1jdOOUa2Ehg23sGVDjEyCHYViC--exdo4qoue4CRV9cFNs5q7ZljviaQ&lib=MahnT0SVJ5TJwLVdHHKEuSzJGkEaqmmYY'); 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -148,7 +148,7 @@ export default function Home() {
         <Container fluid>
           <Navbar.Brand href="/">
             <i className="fas fa-plane spin-icon" style={{ marginRight: '10px' }}></i>
-            "Your Wings to Explore!"
+            Your Wings to Explore!
           </Navbar.Brand>
           <Nav className="ms-auto">
             {isClient && (
