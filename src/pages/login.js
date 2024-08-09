@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Form, Button, Alert, Row, Col, Navbar, Nav, Card} from 'react-bootstrap';
+import { Container, Form, Button, Alert, Row, Col, Navbar, Nav, Card } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import styles from '../styles/login.css';
 
@@ -14,10 +14,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/login', { 
+      const response = await fetch('/api/login', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userName, password }) 
+        body: JSON.stringify({ username: userName, password }) 
       });
       const data = await response.json();
       if (response.ok) {
@@ -80,5 +80,3 @@ export default function Login() {
     </Container>
   );
 }
-
-
