@@ -39,7 +39,7 @@
 //   }
 // }
 import User from '../../../user-service';
-import connectDB from '../../../utils/connectDB';
+import connectDB from '../../utlis/connectDB';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

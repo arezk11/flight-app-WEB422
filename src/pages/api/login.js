@@ -42,7 +42,7 @@
 // }
 import User from '../../../user-service';
 import jwt from 'jsonwebtoken';
-import connectDB from '../../../utils/connectDB';
+import connectDB from '../../utlis/connectDB';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
