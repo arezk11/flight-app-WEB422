@@ -4,11 +4,19 @@
 
 // const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
+<<<<<<< HEAD
 // export default async function handler(req, res) {
 //   await mongoose.connect(process.env.MONGO_URL, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,
 //   });
+=======
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+
+});
+>>>>>>> 9c81390400199b36de292122887736b3f5a28e3e
 
 //   if (req.method === 'POST') {
 //     const { username, password } = req.body;
