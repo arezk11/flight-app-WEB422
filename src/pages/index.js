@@ -22,41 +22,32 @@ export default function Home() {
 
     const token = localStorage.getItem('token');
     if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
       setUserName(decodedToken.userName);
-      fetchWishlist(decodedToken.userId);
+    }
+
+    // Load wishlist from local storage if it exists
+    const storedWishlist = localStorage.getItem('wishlist');
+    if (storedWishlist) {
+      setWishlist(JSON.parse(storedWishlist));
     }
   }, []);
 
   const fetchFlights = async () => {
     try {
-      const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=9CgYreB857S5YE6UzGqJt1Cfnl6jnsYl07J5H_-O2c4GkSbqZrZ33RFeaYATK_Z4CfB7tjVtgCO14dmCPVDPSRxGgPt7AdG8m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnKo9Mx1y9gVJKkomOVf9RyvonW_8TSvWiWN9Kwgize1jdOOUa2Ehg23sGVDjEyCHYViC--exdo4qoue4CRV9cFNs5q7ZljviaQ&lib=MahnT0SVJ5TJwLVdHHKEuSzJGkEaqmmYY'); // Replace with your actual API URL
+      const response = await fetch('http://localhost:8080/api/flights');
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      console.log('Fetched flights data:', data);
+
       const flightsArray = Array.isArray(data) ? data : Object.values(data);
+
       setFlights(flightsArray);
       setTotalPages(Math.ceil(flightsArray.length / itemsPerPage));
     } catch (error) {
       setError('Failed to fetch flights data');
-    }
-  };
-
-  const fetchWishlist = async (userId) => {
-    try {
-      const response = await fetch(`/api/wishlist?userId=${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      setWishlist(data.flights || []);
-    } catch (error) {
-      console.error('Failed to fetch wishlist:', error);
     }
   };
 
@@ -83,13 +74,13 @@ export default function Home() {
     setCurrentPage(page);
   };
 
-  const handleSelect = (flightId) => {
+  const handleSelect = (index) => {
     if (isClient) {
       const token = localStorage.getItem('token');
       if (token) {
-        window.location.href = `/checkout?flightId=${flightId}`;
+        router.push(`/checkout?index=${index}`);
       } else {
-        window.location.href = '/register';
+        router.push('/register');
       }
     }
   };
@@ -101,32 +92,16 @@ export default function Home() {
     }
   };
 
-  const handleWishlistToggle = async (flightId) => {
-    if (isClient) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const userId = JSON.parse(atob(token.split('.')[1])).userId;
-
-        try {
-          const response = await fetch('/api/wishlist', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({ userId, flightId }),
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          fetchWishlist(userId);
-        } catch (error) {
-          console.error('Failed to update wishlist:', error);
-        }
-      } else {
-        window.location.href = '/register';
-      }
+  const handleWishlistToggle = (index) => {
+    const isFlightInWishlist = wishlist.includes(index);
+    if (isFlightInWishlist) {
+      setWishlist(wishlist.filter(flightIndex => flightIndex !== index));
+    } else {
+      setWishlist([...wishlist, index]);
     }
+
+    // Update local storage
+    localStorage.setItem('wishlist', JSON.stringify(isFlightInWishlist ? wishlist.filter(flightIndex => flightIndex !== index) : [...wishlist, index]));
   };
 
   const indexOfLastFlight = currentPage * itemsPerPage;
@@ -158,15 +133,16 @@ export default function Home() {
                     <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                     <Navbar.Text className="ms-2">Welcome, {userName}</Navbar.Text>
+
                     <Dropdown>
                       <Dropdown.Toggle variant="success" id="dropdown-wishlist">
                         <span role="img" aria-label="wishlist">❤️</span>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         {wishlist.length > 0 ? (
-                          wishlist.map(flight => (
-                            <Dropdown.Item key={flight}>
-                              {flight}
+                          wishlist.map(flightIndex => (
+                            <Dropdown.Item key={flightIndex}>
+                              {flights[flightIndex]?.flight || 'Flight'}
                             </Dropdown.Item>
                           ))
                         ) : (
@@ -174,6 +150,7 @@ export default function Home() {
                         )}
                       </Dropdown.Menu>
                     </Dropdown>
+
                   </>
                 ) : (
                   <>
@@ -188,6 +165,7 @@ export default function Home() {
       </Navbar>
       <Container className="mt-5">
         <h1>Hello {userName}<br />Where do you want to explore?</h1>
+
         {error && <Alert variant="danger">{error}</Alert>}
         <Form className="mb-3" onSubmit={handleSearch}>
           <Row>
@@ -217,8 +195,8 @@ export default function Home() {
           </Row>
         </Form>
         <Row>
-          {currentFlights.map(flight => (
-            <Col key={flight._id} md={4} lg={3}>
+          {currentFlights.map((flight, index) => (
+            <Col key={index} md={4} lg={3}>
               <Card className="mb-4">
                 <Card.Img variant="top" src={flight.image_url} alt={`${flight.airline} flight image`} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
                 <Card.Body>
@@ -233,13 +211,13 @@ export default function Home() {
                     Price: {localStorage.getItem('token') ? `$${flight.price}` : 'Login to see price'}<br />
                   </Card.Text>
                   {isClient && localStorage.getItem('token') && (
-                    <Button variant="outline-danger" onClick={() => handleWishlistToggle(flight._id)}>
-                      <span role="img" aria-label="wishlist">
+                    <Button variant="outline-danger" onClick={() => handleWishlistToggle(index)}>
+                      <span role="img" aria-label="wishlist" style={{ color: wishlist.includes(index) ? 'black' : 'red' }}>
                         ❤️
                       </span>
                     </Button>
                   )}
-                  <Button onClick={() => handleSelect(flight._id)}>Select</Button>
+                  <Button onClick={() => handleSelect(index)}>Select</Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -248,14 +226,14 @@ export default function Home() {
         <Pagination>{paginationItems}</Pagination>
       </Container>
       <style jsx>{`
-        .spin-icon {
-          animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
+          .spin-icon {
+            animation: spin 2s linear infinite;
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
     </div>
   );
 }

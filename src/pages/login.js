@@ -35,7 +35,7 @@ export default function Login() {
     <Container fluid className={styles.container}>
       <Navbar bg="dark" variant="dark" className="mb-4">
         <Container>
-          <Navbar.Brand href="/">Flight App</Navbar.Brand>
+          <Navbar.Brand href="/">Your Wings to Explore</Navbar.Brand>
           <Nav className="ms-auto">
             <Nav.Link href="/login">Login</Nav.Link>
             <Nav.Link href="/register">Register</Nav.Link>

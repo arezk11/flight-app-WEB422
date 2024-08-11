@@ -1,7 +1,3 @@
-
-
-
-
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -99,4 +95,22 @@ app.use((req, res) => {
 
 app.listen(HTTP_PORT, () => {
   console.log('API listening on:', HTTP_PORT || 8080);
+});
+
+
+
+app.get('/api/flights/:id', async (req, res) => {
+  try {
+    const flightId = req.params.id;
+    const flights = await fetchFlights();
+    const flight = flights.find(f => f.index === flightId);
+
+    if (!flight) {
+      return res.status(404).json({ message: 'Flight not found' });
+    }
+
+    res.json(flight);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch flight data' });
+  }
 });
