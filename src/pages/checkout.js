@@ -15,7 +15,7 @@ export default function Checkout() {
   useEffect(() => {
     const fetchFlight = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/flights');
+        const response = await fetch('/api/flights');
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
