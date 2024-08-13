@@ -69,7 +69,7 @@ export default function Checkout() {
         <Container fluid>
           <Navbar.Brand href="/">
             <i className="fas fa-plane spin-icon" style={{ marginRight: '10px' }}></i>
-            Flight App
+          Your Wings to Explore!
           </Navbar.Brand>
           <Nav className="ms-auto">
             <Nav.Link href="/">Home</Nav.Link>
