@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Form, Button, Alert, Pagination, FormControl, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import MyNavbar from '../components/Navbar';
-import Card from '../components/Card'; // Import the custom Card component
+import Card from '../components/Card'; 
 
 export default function Home() {
   const [fromCity, setFromCity] = useState('');
