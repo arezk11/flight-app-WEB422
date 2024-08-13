@@ -1,4 +1,3 @@
-// components/Card.js
 import React from 'react';
 import { Card as BootstrapCard, Button } from 'react-bootstrap';
 
