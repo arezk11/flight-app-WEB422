@@ -22,6 +22,7 @@ export default function Card({ flight, index, isClient, handleSelect, handleWish
           Duration: {flight.duration} hours<br />
           Price: {localStorage.getItem('token') ? `$${flight.price}` : 'Login to see price'}<br />
         </BootstrapCard.Text>
+        <Button onClick={() => handleSelect(index)}>Select</Button>
         {isClient && localStorage.getItem('token') && (
           <>
             <Button variant="outline-danger" onClick={() => handleWishlistToggle(index)}>
@@ -29,7 +30,7 @@ export default function Card({ flight, index, isClient, handleSelect, handleWish
                 ❤️
               </span>
             </Button>
-            <Button onClick={() => handleSelect(index)}>Select</Button>
+  
           </>
         )}
       </BootstrapCard.Body>
