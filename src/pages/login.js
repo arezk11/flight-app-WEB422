@@ -33,7 +33,7 @@ export default function Login() {
 
   return (
     <Container fluid className={styles.container}>
-      <MyNavbar /> {/* Use the Navbar component here */}
+      <MyNavbar /> {}
       <Container className="d-flex justify-content-center align-items-center min-vh-100">
         <Card className={styles.card}>
           <Card.Body>
