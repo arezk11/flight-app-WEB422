@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Row, Col, Form, Navbar, Nav, Alert, Button } from 'react-bootstrap';
-import Card from '../components/Card'; // Import the Card component
+import Card from '../components/Card'; 
 
 export default function Checkout() {
   const [flight, setFlight] = useState(null);
@@ -46,7 +46,7 @@ export default function Checkout() {
       return;
     }
 
-    // Simulate booking confirmation
+  
     setConfirmation(`Your booking is confirmed! A confirmation has been sent to ${email}.`);
   };
 
@@ -54,7 +54,7 @@ export default function Checkout() {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      return decodedToken.emailAddress; // Ensure this matches the field in your token
+      return decodedToken.emailAddress; 
     }
     return '';
   };
@@ -88,7 +88,7 @@ export default function Checkout() {
                 <Card
                   flight={flight}
                   index={index}
-                  isClient={false} // No wishlist or select button in checkout
+                  isClient={false} 
                   handleSelect={() => {}}
                   handleWishlistToggle={() => {}}
                   wishlist={[]}
