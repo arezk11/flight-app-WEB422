@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card as BootstrapCard, Button } from 'react-bootstrap';
 
-export default function Card({ flight, index, isClient, handleSelect, handleWishlistToggle, wishlist }) {
+export default function Card({ flight, index, isClient, handleSelect, handleWishlistToggle, wishlist, showSelectButton  }) {
   return (
     <BootstrapCard className="mb-4">
       <BootstrapCard.Img
